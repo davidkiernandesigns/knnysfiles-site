@@ -73,7 +73,7 @@ function Menu({ button }: { button: React.RefObject<HTMLButtonElement | null> })
         exit={hidden}
         transition={{ duration: 0.35, ease: EASE }}
       >
-        <TitleBar title="all files" />
+        <TitleBar title="all files" onClose={close} />
         <div className="menu-body">
           <div className="menu-list" data-lenis-prevent>
             {projects.map((p) => (

@@ -178,6 +178,7 @@ export function Gallery({ project }: { project: Project }) {
           <SiteLink href="/">{site.name}</SiteLink><b>›</b><BackLink>work</BackLink><b>›</b>{name}
         </PathBar>
       </div>
+      <BackLink className="back-pill" aria-label="close folder, back to work"><Back />work</BackLink>
     </section>
   );
 }

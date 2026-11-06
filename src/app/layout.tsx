@@ -35,6 +35,7 @@ var r=document.documentElement;
 if(location.pathname!=='/'||location.hash||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
 var seen=false;try{seen=sessionStorage.getItem('knnys-intro')==='1';sessionStorage.setItem('knnys-intro','1')}catch(e){}
 r.dataset.intro=seen?'repeat':'first';
+if(!seen)r.dataset.preload='1';
 }catch(e){}})()`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {

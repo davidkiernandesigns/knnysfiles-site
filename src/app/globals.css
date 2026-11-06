@@ -103,7 +103,28 @@ body.menu-open .book, body.menu-open .logo { opacity: 0; pointer-events: none; }
 .title-left { display: flex; align-items: center; gap: 16px; min-width: 0; }
 .dots { display: flex; gap: 8px; }
 .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
-.dots i:nth-child(1) { background: var(--mocha); }
+.dots i, .dots button { flex: none; }
+.dots button { position: relative; width: 12px; height: 12px; padding: 0; border: 0; border-radius: 50%; display: block; background: var(--mocha); transition: background .15s, transform .15s; }
+.dots a.dot-close { position: relative; width: 12px; height: 12px; border-radius: 50%; display: block; flex: none; background: var(--mocha); transition: background .15s, transform .15s; }
+.dots a.dot-close::after { content: ""; position: absolute; inset: -10px; }
+.dots a.dot-close:hover { background: var(--oat); }
+.dots a.dot-close:active { transform: scale(.88); }
+.back-pill { display: none; }
+@media (max-width: 767px) {
+  .back-pill {
+    position: fixed; z-index: 60; left: 50%; transform: translateX(-50%); bottom: max(18px, env(safe-area-inset-bottom, 0px));
+    display: inline-flex; align-items: center; gap: 6px; padding: 12px 20px 12px 14px; border-radius: 999px;
+    background: rgba(43, 36, 32, .92); border: 1px solid var(--edge); color: var(--oat); font: 500 15px/1 var(--body);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+  }
+  .back-pill svg { width: 16px; height: 16px; }
+  .mini-foot { padding-bottom: 84px; }
+  .back-pill:active { background: var(--taupe); }
+}
+.dots button::after { content: ""; position: absolute; inset: -8px; }
+.dots button:hover { background: var(--oat); }
+.dots button:active { transform: scale(.88); }
+.dots button:focus-visible { outline: 2px solid var(--oat); outline-offset: 3px; }
 .dots i:nth-child(2) { background: var(--stone); }
 .dots i:nth-child(3) { background: var(--taupe); }
 .arrows { display: flex; gap: 4px; }
@@ -384,6 +405,22 @@ body.menu-open .book, body.menu-open .logo { opacity: 0; pointer-events: none; }
 
 /* page load: about 1s, wordmark first, then icons. set by the inline script in layout.tsx, so it runs before hydration */
 [data-intro='repeat'] { --intro-speed: .55; }
+[data-preload] .wordmark, [data-preload] .hero .icon, [data-preload] .nav { animation-play-state: paused !important; }
+html[data-preload] { overflow: hidden; }
+
+/* first-visit startup screen, plus the sleep screen the red dot falls back to */
+.preload, .sleep { position: fixed; inset: 0; z-index: 200; display: none; place-items: center; align-content: center; gap: 22px; background: var(--black); color: var(--oat); }
+[data-preload] .preload { display: grid; }
+.preload.out { opacity: 0; pointer-events: none; transition: opacity .45s ease-out; }
+.preload-word { font: 400 clamp(44px, 7vw, 76px)/1 var(--display); letter-spacing: .01em; }
+.preload-bar { width: 148px; height: 4px; border-radius: 4px; background: var(--umber); overflow: hidden; }
+.preload-bar i { display: block; height: 100%; width: 0; border-radius: 4px; background: var(--oat); transition: width 1.2s cubic-bezier(.3, .6, .3, 1); }
+.preload.run .preload-bar i { width: 72%; }
+.preload.ready .preload-bar i { width: 100%; transition: width .25s ease-in-out; }
+.sleep { display: grid; opacity: 0; pointer-events: none; transition: opacity .5s ease-out; }
+.sleep.on { opacity: 1; pointer-events: auto; cursor: var(--cursor-hand); }
+.sleep p { margin: 0; font: 400 14px/1.4 var(--body); color: var(--stone); }
+.sleep .preload-word { color: var(--taupe); }
 [data-intro] .wordmark { animation: wordIn calc(.9s * var(--intro-speed, 1)) var(--ease) both; }
 [data-intro] .hero .icon { animation: iconIn calc(.55s * var(--intro-speed, 1)) var(--ease) both; animation-delay: calc((.3s + var(--i) * 55ms) * var(--intro-speed, 1)); }
 [data-intro] .nav { animation: fade .6s .25s both; }

@@ -6,6 +6,8 @@ import { MotionConfig } from 'motion/react';
 import { usePathname } from 'next/navigation';
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { GrowProvider } from './GrowProvider';
+import { Preload } from './Preload';
+import { Sleep, SleepContext } from './Sleep';
 import { prefersReducedMotion } from '@/lib';
 
 type MenuState = { open: boolean; setOpen: (open: boolean) => void };
@@ -57,16 +59,23 @@ export function Providers({ children }: { children: ReactNode }) {
     return { autoRaf: true, smoothWheel: !reduced, lerp: reduced ? 1 : 0.1 };
   });
 
+  const [asleep, setAsleep] = useState(false);
+  const sleep = useMemo(() => ({ asleep, setAsleep }), [asleep]);
+
   useEffect(() => setOpen(false), [pathname]);
 
   return (
     <ReactLenis root options={options}>
       <MotionConfig reducedMotion="user">
         <MenuContext.Provider value={menu}>
-          <GrowProvider>
-            <RouteScroll />
-            {children}
-          </GrowProvider>
+          <SleepContext.Provider value={sleep}>
+            <GrowProvider>
+              <RouteScroll />
+              {children}
+            </GrowProvider>
+            <Preload />
+            <Sleep />
+          </SleepContext.Provider>
         </MenuContext.Provider>
       </MotionConfig>
     </ReactLenis>

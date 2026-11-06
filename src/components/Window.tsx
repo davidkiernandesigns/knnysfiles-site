@@ -2,13 +2,14 @@ import type { ReactNode } from 'react';
 import { about, projectPath, projects, site } from '@/content/site';
 import { BackLink } from './GrowProvider';
 import { Back, Forward, SideFolder } from './Icons';
+import { CloseDot } from './CloseDot';
 import { SiteLink } from './SiteLink';
 
-export function TitleBar({ title, back, views }: { title: string; back?: boolean; views?: ReactNode }) {
+export function TitleBar({ title, back, views, onClose }: { title: string; back?: boolean; views?: ReactNode; onClose?: () => void }) {
   return (
     <div className="title-bar">
       <div className="title-left">
-        <span className="dots" aria-hidden="true"><i /><i /><i /></span>
+        <span className="dots"><CloseDot onClose={onClose} back={back} /><i aria-hidden="true" /><i aria-hidden="true" /></span>
         <span className="arrows">
           {back ? <BackLink aria-label="back to work"><Back /></BackLink> : <span><Back /></span>}
           <span><Forward /></span>
