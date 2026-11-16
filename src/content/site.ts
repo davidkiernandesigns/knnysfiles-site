@@ -1,3 +1,4 @@
+import { exampleCover, exampleDescriptions, examplePhotos } from './examples';
 /* The starting content. The live site reads from the database (see src/server/content.ts) and is seeded from here
    the first time it runs, or whenever the database isn't connected, so the site never renders empty.
    Photo counts and the filmstrip come from each project's photos, so nothing here is counted by hand. */
@@ -22,9 +23,10 @@ export type Project = {
   photos: Photo[];
 };
 
+/* placeholder generator, kept for reference: real photos or the examples in ./examples.ts are used now */
 const tones: Tone[] = ['mocha', 'taupe', 'umber', 'stone', 'taupe', 'mocha', 'umber', 'stone'];
 
-const placeholderPhotos = (count: number): Photo[] =>
+export const placeholderPhotos = (count: number): Photo[] =>
   Array.from({ length: count }, (_, i) => ({
     file: `photo_${String(421 + i).padStart(4, '0')}.jpg`,
     image: null,
@@ -34,7 +36,7 @@ const placeholderPhotos = (count: number): Photo[] =>
     tone: tones[i % tones.length],
   }));
 
-const description = '[a few lines on this set: where it was shot, who it was for, what made the day.]';
+export const placeholderDescription = '[a few lines on this set: where it was shot, who it was for, what made the day.]';
 
 export type Wallpaper = { src: string; width: number; height: number };
 
@@ -74,12 +76,11 @@ export const about: AboutDoc = {
   instagramUrl: 'https://www.instagram.com/knnysfiles/',
 };
 
-export const projects: Project[] = [
-  { slug: 'weddings', name: 'weddings', order: 1, cover: '/assets/wedding.jpg', description, photos: placeholderPhotos(24) },
-  { slug: 'portraits', name: 'portraits', order: 2, cover: '/assets/wedding.jpg', description, photos: placeholderPhotos(18) },
-  { slug: 'graduations', name: 'graduations', order: 3, cover: '/assets/wedding.jpg', description, photos: placeholderPhotos(16) },
-  { slug: 'misc', name: 'misc', order: 4, cover: '/assets/wedding.jpg', description, photos: placeholderPhotos(20) },
-].sort((a, b) => a.order - b.order);
+const example = (slug: string, order: number): Project => ({
+  slug, name: slug, order, cover: exampleCover(slug), description: exampleDescriptions[slug], photos: examplePhotos(slug),
+});
+
+export const projects: Project[] = [example('weddings', 1), example('portraits', 2), example('graduations', 3), example('misc', 4)];
 
 export const projectPath = (slug: string) => `/work/${slug}`;
 

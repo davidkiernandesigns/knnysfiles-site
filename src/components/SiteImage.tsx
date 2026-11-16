@@ -1,10 +1,13 @@
 import Image, { getImageProps, type ImageLoader } from 'next/image';
 
 /* Every image on the site goes through this file. Built-in photos go through next/image's optimizer.
-   Photos uploaded in /admin live in R2 and are resized by the /media route instead (?w=). */
+   Photos uploaded in /admin are resized by the /media route instead (?w=), and Unsplash examples by Unsplash. */
 
 const mediaLoader: ImageLoader = ({ src, width }) => `${src}?w=${width}`;
-const loaderFor = (src: string) => (src.startsWith('/media/') ? mediaLoader : undefined);
+/* example photos from Unsplash are resized by Unsplash's own image CDN */
+const unsplashLoader: ImageLoader = ({ src, width, quality }) => `${src}?w=${width}&q=${quality ?? 75}&auto=format&fit=crop`;
+const loaderFor = (src: string) =>
+  src.startsWith('/media/') ? mediaLoader : src.startsWith('https://images.unsplash.com/') ? unsplashLoader : undefined;
 
 type Props = { src: string; alt: string; sizes: string; className?: string };
 

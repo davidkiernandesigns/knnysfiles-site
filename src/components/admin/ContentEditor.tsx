@@ -6,6 +6,10 @@ import { uploadImage } from './upload';
 
 const tones: Tone[] = ['mocha', 'taupe', 'umber', 'stone'];
 
+/* small previews, so the editor never loads full-size photos */
+const thumb = (src: string) =>
+  src.startsWith('/media/') ? `${src}?w=320` : src.startsWith('https://images.unsplash.com/') ? `${src}?w=240&q=60&auto=format&fit=crop` : src;
+
 const move = <T,>(list: T[], from: number, to: number) => {
   if (to < 0 || to >= list.length) return list;
   const next = [...list];
@@ -30,7 +34,7 @@ function Picture({ src, label, onFile, busy, off }: { src: string; label: string
   };
   return (
     <div className="picture">
-      {src ? <img src={src} alt="" /> : <span className="ph tone-taupe" />}
+      {src ? <img src={thumb(src)} alt="" /> : <span className="ph tone-taupe" />}
       <label className="btn ghost small">
         {busy ? 'uploading…' : label}
         <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick} disabled={busy || off} hidden />
@@ -210,7 +214,7 @@ export function ContentEditor({ initial, connected, uploads }: { initial: Conten
               <div className="photos">
                 {p.photos.map((x, xi) => (
                   <div className="photo" key={x.file + xi}>
-                    {x.image ? <img className="thumb" src={x.image} alt="" /> : <span className={`thumb tone-${x.tone}`}>placeholder</span>}
+                    {x.image ? <img className="thumb" src={thumb(x.image)} alt="" /> : <span className={`thumb tone-${x.tone}`}>placeholder</span>}
                     <div className="meta">
                       <Field label="file name" value={x.file} onChange={(v) => setPhoto(pi, xi, { file: v })} />
                       <Field label="date" value={x.date} onChange={(v) => setPhoto(pi, xi, { date: v })} />
