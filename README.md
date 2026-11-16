@@ -16,7 +16,7 @@ open http://localhost:3000 and http://localhost:3000/admin
 - `src/content/site.ts`: the starting content and its types. the database is seeded from it the first time the site runs, and the site falls back to it if the database isn't connected. after that, edit content in `/admin`.
 - `src/server/`: database, auth, analytics and inquiries code. tables create themselves on first use, so there is no migration step.
 - `src/app/admin/` and `src/components/admin/`: the admin screens. api routes are in `src/app/api/admin/`.
-- `src/app/media/`: serves photos uploaded in the admin from r2, and makes smaller copies on request (`?w=`).
+- `src/app/media/` and `src/server/media.ts`: store and serve photos uploaded in the admin (database, or r2 if bound), and make smaller copies on request (`?w=`).
 - `src/track.ts` and `src/components/Tracker.tsx`: the visitor side of analytics.
 - `src/components/SiteImage.tsx`: every image goes through here.
 - `src/app/globals.css`: design tokens and styles from figma v3. admin styles are in `src/app/admin/admin.css`.
@@ -42,7 +42,7 @@ this deploys as a cloudflare worker through the opennext adapter. in the cloudfl
 
 then set up what the admin needs. wrangler creates the database on deploy. if it complains that it doesn't exist, make it once with `npx wrangler d1 create knnysfiles-db` and paste the database_id it prints into wrangler.jsonc.
 
-**photo uploads need r2, which is off for now.** r2 has to be enabled on the cloudflare account first (free tier, card on file). then add this to `wrangler.jsonc` and deploy, and the upload buttons in the admin switch on by themselves:
+**photo storage.** uploads work out of the box: photos are resized in the browser (to about 2000px, kept under 1.25 MB each) and saved in the database, then resized again per screen by the `/media` route and cached on cloudflare's network. that is fine for a few hundred photos. for a bigger library, enable r2 on the cloudflare account (free tier, card on file) and add this to `wrangler.jsonc`. the site uses r2 automatically when it's bound:
 
     "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "knnysfiles-media" }],
 

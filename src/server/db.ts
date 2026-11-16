@@ -16,6 +16,7 @@ const schema = [
     campaign TEXT NOT NULL DEFAULT '', referrer TEXT NOT NULL DEFAULT '', device TEXT NOT NULL DEFAULT '',
     country TEXT NOT NULL DEFAULT '', detail TEXT NOT NULL DEFAULT '')`,
   'CREATE INDEX IF NOT EXISTS events_ts ON events(ts)',
+  'CREATE TABLE IF NOT EXISTS media (key TEXT PRIMARY KEY, type TEXT NOT NULL, data TEXT NOT NULL, created_at INTEGER NOT NULL)',
   'CREATE TABLE IF NOT EXISTS login_attempts (ip TEXT NOT NULL, ts INTEGER NOT NULL)',
 ];
 

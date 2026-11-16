@@ -94,7 +94,7 @@ export function ContentEditor({ initial, connected, uploads }: { initial: Conten
     run(`photos-${pi}`, async () => {
       const list = Array.from(files).filter((f) => f.type.startsWith('image/'));
       for (const file of list) {
-        const up = await uploadImage(file, 2400);
+        const up = await uploadImage(file, 2000);
         const photo: Photo = {
           file: file.name.replace(/[^\w.-]+/g, '_').slice(0, 100) || 'photo.jpg',
           image: up.src,
@@ -135,7 +135,7 @@ export function ContentEditor({ initial, connected, uploads }: { initial: Conten
 
   return (
     <>
-      {!uploads && <p className="note">photo uploads are off until photo storage (R2) is connected. you can still edit all the text, reorder folders and photos, and remove photos.</p>}
+      {!uploads && <p className="note">photo uploads are off because there is no storage connected. you can still edit all the text, reorder folders and photos, and remove photos.</p>}
       {!connected && <p className="note">the database isn&apos;t connected here, so saving is turned off. on Cloudflare it connects through the DB and MEDIA bindings.</p>}
 
       <section className="card">
@@ -222,7 +222,7 @@ export function ContentEditor({ initial, connected, uploads }: { initial: Conten
                       <button type="button" className="btn ghost small" aria-label="move photo down" onClick={() => change((c) => ({ ...c, projects: c.projects.map((q, i) => (i === pi ? { ...q, photos: move(q.photos, xi, xi + 1) } : q)) }))}>↓</button>
                       <label className="btn ghost small">
                         {busy === `photo-${pi}-${xi}` ? '…' : x.image ? 'replace' : 'add image'}
-                        <input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={!uploads} onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) run(`photo-${pi}-${xi}`, async () => setPhoto(pi, xi, { image: (await uploadImage(f, 2400)).src })); }} />
+                        <input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={!uploads} onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) run(`photo-${pi}-${xi}`, async () => setPhoto(pi, xi, { image: (await uploadImage(f, 2000)).src })); }} />
                       </label>
                       <button type="button" className="btn danger small" onClick={() => change((c) => ({ ...c, projects: c.projects.map((q, i) => (i === pi ? { ...q, photos: q.photos.filter((_, j) => j !== xi) } : q)) }))}>remove</button>
                     </div>

@@ -1,7 +1,7 @@
 import { guard } from '@/server/auth';
 import { cleanContent, getContentForAdmin, writeContent } from '@/server/content';
 import { getDb } from '@/server/db';
-import { getEnv } from '@/server/env';
+import { deleteMedia } from '@/server/media';
 
 const mediaKeys = (content: { site: unknown; about: unknown; projects: unknown }) =>
   new Set(JSON.stringify(content).match(/\/media\/[A-Za-z0-9/_.-]+/g)?.map((m) => m.slice(7)) ?? []);
@@ -24,9 +24,8 @@ export async function PUT(request: Request) {
   await writeContent(db, content);
 
   // photos that are no longer used anywhere come out of storage
-  const { MEDIA } = getEnv();
   const kept = mediaKeys(content);
   const gone = [...mediaKeys(before)].filter((key) => !kept.has(key));
-  if (MEDIA && gone.length) await MEDIA.delete(gone).catch(() => {});
+  await deleteMedia(gone).catch(() => {});
   return Response.json({ ok: true, content });
 }
