@@ -331,7 +331,9 @@ body.menu-open .book, body.menu-open .logo { opacity: 0; pointer-events: none; }
 .stage { position: relative; overflow: hidden; aspect-ratio: 862 / 576; max-height: calc(100vh - 324px); width: 100%; touch-action: pan-y; background: var(--umber); }
 .rail { display: flex; height: 100%; }
 .slide { position: relative; flex: 0 0 100%; height: 100%; }
-.slide img, .thumb img, .grid-shot img { object-fit: cover; }
+.thumb img { object-fit: cover; }
+/* the main viewer and icon view always show the whole photo, letterboxed, never cropped */
+.slide img, .grid-shot img { object-fit: contain; }
 .ph { display: block; width: 100%; height: 100%; padding: 16px; font-size: 14px; line-height: 1.4; background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, .5)); }
 .tone-mocha { background-color: var(--mocha); color: var(--black); }
 .tone-taupe { background-color: var(--taupe); color: var(--oat); }
@@ -360,7 +362,7 @@ body.menu-open .book, body.menu-open .logo { opacity: 0; pointer-events: none; }
 .grid-view { display: none; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; padding: 24px; align-content: start; }
 .grid-view button { text-align: left; font-size: 12px; line-height: 1.5; color: var(--stone); transition: color .15s; }
 .grid-view button:hover { color: var(--oat); }
-.grid-shot { position: relative; display: block; aspect-ratio: 3 / 2; margin-bottom: 6px; overflow: hidden; }
+.grid-shot { position: relative; display: block; aspect-ratio: 3 / 2; margin-bottom: 6px; overflow: hidden; background: var(--umber); }
 .grid-shot .ph { padding: 0; }
 .list-view { display: none; padding: 12px 24px; align-content: start; font-size: 13px; }
 .list-view button { width: 100%; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px; text-align: left; padding: 9px 10px; border-radius: 6px; transition: background .15s; }

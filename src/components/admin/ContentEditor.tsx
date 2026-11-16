@@ -8,7 +8,7 @@ const tones: Tone[] = ['mocha', 'taupe', 'umber', 'stone'];
 
 /* small previews, so the editor never loads full-size photos */
 const thumb = (src: string) =>
-  src.startsWith('/media/') ? `${src}?w=320` : src.startsWith('https://images.unsplash.com/') ? `${src}?w=240&q=60&auto=format&fit=crop` : src;
+  src.startsWith('/media/') ? `${src}?w=320` : src.startsWith('https://images.unsplash.com/') ? `${src}?w=240&q=60&auto=format&fit=max` : src;
 
 const move = <T,>(list: T[], from: number, to: number) => {
   if (to < 0 || to >= list.length) return list;

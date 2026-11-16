@@ -5,7 +5,7 @@ import Image, { getImageProps, type ImageLoader } from 'next/image';
 
 const mediaLoader: ImageLoader = ({ src, width }) => `${src}?w=${width}`;
 /* example photos from Unsplash are resized by Unsplash's own image CDN */
-const unsplashLoader: ImageLoader = ({ src, width, quality }) => `${src}?w=${width}&q=${quality ?? 75}&auto=format&fit=crop`;
+const unsplashLoader: ImageLoader = ({ src, width, quality }) => `${src}?w=${width}&q=${quality ?? 75}&auto=format&fit=max`;
 const loaderFor = (src: string) =>
   src.startsWith('/media/') ? mediaLoader : src.startsWith('https://images.unsplash.com/') ? unsplashLoader : undefined;
 
