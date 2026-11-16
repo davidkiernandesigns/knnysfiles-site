@@ -40,10 +40,11 @@ this deploys as a cloudflare worker through the opennext adapter. in the cloudfl
 - root directory: `/`
 - worker name: `knnysfiles-site`, which has to match `name` in `wrangler.jsonc`
 
-then set up what the admin needs. wrangler may create the database and bucket for you on deploy. if the deploy complains that they don't exist, make them once:
+then set up what the admin needs. wrangler creates the database on deploy. if it complains that it doesn't exist, make it once with `npx wrangler d1 create knnysfiles-db` and paste the database_id it prints into wrangler.jsonc.
 
-    npx wrangler d1 create knnysfiles-db        # paste the database_id it prints into wrangler.jsonc
-    npx wrangler r2 bucket create knnysfiles-media
+**photo uploads need r2, which is off for now.** r2 has to be enabled on the cloudflare account first (free tier, card on file). then add this to `wrangler.jsonc` and deploy, and the upload buttons in the admin switch on by themselves:
+
+    "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "knnysfiles-media" }],
 
 and add the admin password as a secret on the worker (dashboard: settings, variables and secrets, or `npx wrangler secret put ADMIN_PASSWORD`). pick a long one. five wrong tries locks an address out for ten minutes.
 

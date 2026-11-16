@@ -1,5 +1,6 @@
 import { ContentEditor } from '@/components/admin/ContentEditor';
 import { getContentForAdmin } from '@/server/content';
+import { getEnv } from '@/server/env';
 
 export default async function ContentPage() {
   const { content, connected } = await getContentForAdmin().catch(() => ({ content: null, connected: false }));
@@ -11,7 +12,7 @@ export default async function ContentPage() {
           <p>everything on the public site. changes go live the moment you save.</p>
         </div>
       </div>
-      {content ? <ContentEditor initial={content} connected={connected} /> : <p className="note">could not load the content.</p>}
+      {content ? <ContentEditor initial={content} connected={connected} uploads={Boolean(getEnv().MEDIA)} /> : <p className="note">could not load the content.</p>}
     </>
   );
 }

@@ -22,7 +22,7 @@ function Field({ label, value, onChange, wide, area }: { label: string; value: s
   );
 }
 
-function Picture({ src, label, onFile, busy }: { src: string; label: string; onFile: (file: File) => void; busy: boolean }) {
+function Picture({ src, label, onFile, busy, off }: { src: string; label: string; onFile: (file: File) => void; busy: boolean; off?: boolean }) {
   const pick = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     e.target.value = '';
@@ -33,13 +33,13 @@ function Picture({ src, label, onFile, busy }: { src: string; label: string; onF
       {src ? <img src={src} alt="" /> : <span className="ph tone-taupe" />}
       <label className="btn ghost small">
         {busy ? 'uploading…' : label}
-        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick} disabled={busy} hidden />
+        <input type="file" accept="image/jpeg,image/png,image/webp" onChange={pick} disabled={busy || off} hidden />
       </label>
     </div>
   );
 }
 
-export function ContentEditor({ initial, connected }: { initial: Content; connected: boolean }) {
+export function ContentEditor({ initial, connected, uploads }: { initial: Content; connected: boolean; uploads: boolean }) {
   const [content, setContent] = useState(initial);
   const [dirty, setDirty] = useState(false);
   const [status, setStatus] = useState('');
@@ -135,6 +135,7 @@ export function ContentEditor({ initial, connected }: { initial: Content; connec
 
   return (
     <>
+      {!uploads && <p className="note">photo uploads are off until photo storage (R2) is connected. you can still edit all the text, reorder folders and photos, and remove photos.</p>}
       {!connected && <p className="note">the database isn&apos;t connected here, so saving is turned off. on Cloudflare it connects through the DB and MEDIA bindings.</p>}
 
       <section className="card">
@@ -152,7 +153,7 @@ export function ContentEditor({ initial, connected }: { initial: Content; connec
         <Picture
           src={site.heroWallpaperSmall.src}
           label="replace photo"
-          busy={busy === 'hero'}
+          busy={busy === 'hero'} off={!uploads}
           onFile={(file) =>
             run('hero', async () => {
               const [large, small] = [await uploadImage(file, 2560), await uploadImage(file, 1000)];
@@ -175,7 +176,7 @@ export function ContentEditor({ initial, connected }: { initial: Content; connec
         <Picture
           src={about.portrait}
           label="replace portrait"
-          busy={busy === 'portrait'}
+          busy={busy === 'portrait'} off={!uploads}
           onFile={(file) => run('portrait', async () => setAbout('portrait', (await uploadImage(file, 1600)).src))}
         />
       </section>
@@ -199,12 +200,12 @@ export function ContentEditor({ initial, connected }: { initial: Content; connec
             <>
               <Field label="description (shown in the gallery info panel)" value={p.description} onChange={(v) => setProject(pi, { description: v })} area />
               <h3>folder cover</h3>
-              <Picture src={p.cover} label="replace cover" busy={busy === `cover-${pi}`} onFile={(file) => run(`cover-${pi}`, async () => setProject(pi, { cover: (await uploadImage(file, 1000)).src }))} />
+              <Picture src={p.cover} label="replace cover" busy={busy === `cover-${pi}`} off={!uploads} onFile={(file) => run(`cover-${pi}`, async () => setProject(pi, { cover: (await uploadImage(file, 1000)).src }))} />
 
               <h3>photos</h3>
               <label className="drop">
                 {busy === `photos-${pi}` ? 'uploading…' : 'add photos (choose one or many)'}
-                <input type="file" multiple accept="image/jpeg,image/png,image/webp" hidden disabled={Boolean(busy)} onChange={(e) => { const f = e.target.files; if (f?.length) addPhotos(pi, f); e.target.value = ''; }} />
+                <input type="file" multiple accept="image/jpeg,image/png,image/webp" hidden disabled={Boolean(busy) || !uploads} onChange={(e) => { const f = e.target.files; if (f?.length) addPhotos(pi, f); e.target.value = ''; }} />
               </label>
               <div className="photos">
                 {p.photos.map((x, xi) => (
@@ -221,7 +222,7 @@ export function ContentEditor({ initial, connected }: { initial: Content; connec
                       <button type="button" className="btn ghost small" aria-label="move photo down" onClick={() => change((c) => ({ ...c, projects: c.projects.map((q, i) => (i === pi ? { ...q, photos: move(q.photos, xi, xi + 1) } : q)) }))}>↓</button>
                       <label className="btn ghost small">
                         {busy === `photo-${pi}-${xi}` ? '…' : x.image ? 'replace' : 'add image'}
-                        <input type="file" accept="image/jpeg,image/png,image/webp" hidden onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) run(`photo-${pi}-${xi}`, async () => setPhoto(pi, xi, { image: (await uploadImage(f, 2400)).src })); }} />
+                        <input type="file" accept="image/jpeg,image/png,image/webp" hidden disabled={!uploads} onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) run(`photo-${pi}-${xi}`, async () => setPhoto(pi, xi, { image: (await uploadImage(f, 2400)).src })); }} />
                       </label>
                       <button type="button" className="btn danger small" onClick={() => change((c) => ({ ...c, projects: c.projects.map((q, i) => (i === pi ? { ...q, photos: q.photos.filter((_, j) => j !== xi) } : q)) }))}>remove</button>
                     </div>
