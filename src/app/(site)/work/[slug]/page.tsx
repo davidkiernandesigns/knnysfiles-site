@@ -3,23 +3,19 @@ import { notFound } from 'next/navigation';
 import { Gallery } from '@/components/Gallery';
 import { Folder } from '@/components/Folder';
 import { SiteLink } from '@/components/SiteLink';
-import { about, projects, site } from '@/content/site';
+import { getContent } from '@/server/content';
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
-
-export function generateStaticParams() {
-  return projects.map(({ slug }) => ({ slug }));
-}
-
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
+  const { projects } = await getContent();
   return { title: projects.find((p) => p.slug === slug)?.name };
 }
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
+  const { about, projects, site } = await getContent();
   const index = projects.findIndex((p) => p.slug === slug);
   if (index < 0) notFound();
   const project = projects[index];

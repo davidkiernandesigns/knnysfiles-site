@@ -1,4 +1,8 @@
 import { NextResponse } from 'next/server';
+import { recordEvent } from '@/server/analytics';
+import { clientIp } from '@/server/auth';
+import { getEnv } from '@/server/env';
+import { addInquiry } from '@/server/inquiries';
 
 const clean = (value: unknown, max = 2000) => (typeof value === 'string' ? value.trim().slice(0, max) : '');
 
@@ -20,16 +24,32 @@ export async function POST(request: Request) {
     date: clean(body.date, 100),
     location: clean(body.location, 200),
     message: clean(body.message),
+    source: clean(body.source, 200),
   };
 
   if (!inquiry.name || !/^\S+@\S+\.\S+$/.test(inquiry.email) || !inquiry.type) {
     return NextResponse.json({ error: 'missing fields' }, { status: 422 });
   }
 
-  const webhook = process.env.INQUIRY_WEBHOOK_URL;
+  const { webhook } = getEnv();
+
+  // the database is the record. the webhook, if set, is an extra copy to an inbox or chat.
+  const saved = await addInquiry(inquiry).catch((error) => {
+    console.error('inquiry: could not save', error);
+    return false;
+  });
+
+  if (saved) {
+    await recordEvent(request, { kind: 'inquiry', path: '/', detail: inquiry.type }, clientIp(request)).catch(() => {});
+    if (webhook) {
+      await fetch(webhook, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(inquiry) }).catch(() => {});
+    }
+    return NextResponse.json({ ok: true });
+  }
+
   if (!webhook) {
     if (process.env.NODE_ENV !== 'production') {
-      console.log('inquiry (dev, not delivered):', inquiry);
+      console.log('inquiry (dev, not saved or delivered):', inquiry);
       return NextResponse.json({ ok: true });
     }
     return NextResponse.json({ error: 'inquiries are not configured' }, { status: 503 });

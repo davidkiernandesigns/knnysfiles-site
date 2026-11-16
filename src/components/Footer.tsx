@@ -2,11 +2,12 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import { useRef } from 'react';
-import { about, site } from '@/content/site';
+import { useContent } from '@/content/context';
 import { isSmall, prefersReducedMotion } from '@/lib';
 import { SiteLink } from './SiteLink';
 
 export function Footer() {
+  const { about, site } = useContent();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end end'] });
   /* the footer is off screen at 0, so it can start flat and match the server render */

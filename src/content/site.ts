@@ -1,5 +1,5 @@
-/* All site content lives here until Sanity is added after client approval.
-   The exports match the planned Sanity documents: settings, about and projects.
+/* The starting content. The live site reads from the database (see src/server/content.ts) and is seeded from here
+   the first time it runs, or whenever the database isn't connected, so the site never renders empty.
    Photo counts and the filmstrip come from each project's photos, so nothing here is counted by hand. */
 
 export type Tone = 'mocha' | 'taupe' | 'umber' | 'stone';
@@ -36,7 +36,21 @@ const placeholderPhotos = (count: number): Photo[] =>
 
 const description = '[a few lines on this set: where it was shot, who it was for, what made the day.]';
 
-export const site = {
+export type Wallpaper = { src: string; width: number; height: number };
+
+export type SiteDoc = {
+  name: string; tagline: string; city: string; email: string; emailShort: string;
+  heroWallpaper: Wallpaper; heroWallpaperSmall: Wallpaper; inquiryIntro: string; photoDimensions: string;
+};
+
+export type AboutDoc = {
+  portrait: string; portraitAlt: string; portraitFile: string; bioLead: string; bioBody: string;
+  instagramHandle: string; instagramUrl: string;
+};
+
+export type Content = { site: SiteDoc; about: AboutDoc; projects: Project[] };
+
+export const site: SiteDoc = {
   name: 'knnysfiles',
   tagline: 'photographs of the days you want to keep.',
   city: 'CT',
@@ -48,7 +62,7 @@ export const site = {
   photoDimensions: '[6000 × 4000]',
 };
 
-export const about = {
+export const about: AboutDoc = {
   portrait: '/assets/portrait.jpg',
   portraitAlt: 'Kenny Graham walking on a sand dune with a camera',
   portraitFile: '[name].jpg',
@@ -68,3 +82,5 @@ export const projects: Project[] = [
 ].sort((a, b) => a.order - b.order);
 
 export const projectPath = (slug: string) => `/work/${slug}`;
+
+export const seed: Content = { site, about, projects };

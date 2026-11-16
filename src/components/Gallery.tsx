@@ -3,7 +3,7 @@
 import { animate, motion, useMotionValue, useTransform } from 'motion/react';
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
 import type { Photo, Project } from '@/content/site';
-import { site } from '@/content/site';
+import { useContent } from '@/content/context';
 import { prefersReducedMotion } from '@/lib';
 import { BackLink } from './GrowProvider';
 import { Back, Forward, GalleryIcon, Grid, List } from './Icons';
@@ -26,6 +26,7 @@ const viewButtons: { id: View; label: string; Icon: () => React.JSX.Element }[] 
 ];
 
 export function Gallery({ project }: { project: Project }) {
+  const { site } = useContent();
   const { photos, name, slug, description } = project;
   const total = photos.length;
   const { open: menuOpen } = useMenu();

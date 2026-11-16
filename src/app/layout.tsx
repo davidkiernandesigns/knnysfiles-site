@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import type { ReactNode } from 'react';
-import { Providers } from '@/components/Providers';
-import { Nav } from '@/components/Nav';
 import { site } from '@/content/site';
 import './globals.css';
 
@@ -48,10 +46,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         </noscript>
       </head>
       <body>
-        <Providers>
-          <Nav />
-          {children}
-        </Providers>
+        {children}
       </body>
     </html>
   );

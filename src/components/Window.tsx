@@ -1,5 +1,8 @@
+'use client';
+
 import type { ReactNode } from 'react';
-import { about, projectPath, projects, site } from '@/content/site';
+import { useContent } from '@/content/context';
+import { projectPath } from '@/content/site';
 import { BackLink } from './GrowProvider';
 import { Back, Forward, SideFolder } from './Icons';
 import { CloseDot } from './CloseDot';
@@ -31,6 +34,7 @@ export function PathBar({ children, status }: { children: ReactNode; status: str
 }
 
 export function Sidebar({ active }: { active?: string }) {
+  const { about, projects, site } = useContent();
   return (
     <aside className="sidebar">
       <span className="side-label">work</span>

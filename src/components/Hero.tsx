@@ -3,7 +3,8 @@
 import { motion, useScroll, useTransform } from 'motion/react';
 import Link from 'next/link';
 import { useRef, type CSSProperties } from 'react';
-import { about, projectPath, projects, site } from '@/content/site';
+import { useContent } from '@/content/context';
+import { projectPath } from '@/content/site';
 import { clamp, isSmall, prefersReducedMotion } from '@/lib';
 import { useGrowClick } from './GrowProvider';
 import { AliasIcon, FolderIcon, TextIcon } from './Icons';
@@ -22,6 +23,7 @@ function FolderLink({ slug, label, index }: { slug: string; label: string; index
 }
 
 export function Hero() {
+  const { about, projects, site } = useContent();
   const { scrollY } = useScroll();
   const drift = (rate: number) => (y: number) =>
     prefersReducedMotion() ? 0 : y * rate * (isSmall() ? 0.35 : 1);

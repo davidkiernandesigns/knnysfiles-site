@@ -1,20 +1,35 @@
 # knnysfiles
 
-next.js site for knnysfiles. motion handles animation, lenis handles smooth scroll.
+next.js site for knnysfiles. motion handles animation, lenis handles smooth scroll. a built-in `/admin` handles content, inquiries and analytics.
 
 ## run
 
     npm install
     npm run dev
 
-open http://localhost:3000
+open http://localhost:3000 and http://localhost:3000/admin
+
+`npm run dev` runs the cloudflare bindings locally (a database and photo storage in `.wrangler/state`), so the admin works on your machine. to log in locally, put `ADMIN_PASSWORD=something` in a `.dev.vars` file (see `.dev.vars.example`). that file is gitignored.
 
 ## where things live
 
-- `src/content/site.ts`: all copy, projects and photos, shaped like the planned sanity documents. counts come from each project's photos.
-- `src/components/SiteImage.tsx`: every image goes through here, so moving to sanity's image cdn is one small swap.
-- `src/app/globals.css`: design tokens and styles from figma v3.
-- `public/assets/`: images and cursors. add a photo by setting `image` on it in `site.ts`.
+- `src/content/site.ts`: the starting content and its types. the database is seeded from it the first time the site runs, and the site falls back to it if the database isn't connected. after that, edit content in `/admin`.
+- `src/server/`: database, auth, analytics and inquiries code. tables create themselves on first use, so there is no migration step.
+- `src/app/admin/` and `src/components/admin/`: the admin screens. api routes are in `src/app/api/admin/`.
+- `src/app/media/`: serves photos uploaded in the admin from r2, and makes smaller copies on request (`?w=`).
+- `src/track.ts` and `src/components/Tracker.tsx`: the visitor side of analytics.
+- `src/components/SiteImage.tsx`: every image goes through here.
+- `src/app/globals.css`: design tokens and styles from figma v3. admin styles are in `src/app/admin/admin.css`.
+
+## the admin
+
+sign in at `/admin` with the password.
+
+- **overview**: visitors, page views, inquiries and conversion, a daily chart, where visitors come from, utm campaigns, folders opened, devices, countries, link clicks. no cookies. a visitor is a daily hash of address and browser, and the address is never stored. your own visits while signed in are left out, and visitors with do not track or global privacy control on are not counted.
+- **inquiries**: everything from the book a shoot form, with status (new, replied, booked, done, lost), private notes, search and a reply button. each one records where the visitor came from.
+- **content**: site text, home photo, about, folders and photos. upload, reorder, rename and delete. photos are shrunk in the browser before upload. changes go live when you hit save.
+
+tag links for campaigns like `https://knnysfiles.com/?utm_source=instagram&utm_medium=bio&utm_campaign=launch` and they show up in overview and on any inquiry that comes from that visit.
 
 ## hosting on cloudflare
 
@@ -22,12 +37,22 @@ this deploys as a cloudflare worker through the opennext adapter. in the cloudfl
 
 - build command: `npx opennextjs-cloudflare build`
 - deploy command: `npx opennextjs-cloudflare deploy`
+- root directory: `/`
 - worker name: `knnysfiles-site`, which has to match `name` in `wrangler.jsonc`
 
-add `INQUIRY_WEBHOOK_URL` as a secret on the worker. test the cloudflare runtime locally with `npm run preview`.
+then set up what the admin needs. wrangler may create the database and bucket for you on deploy. if the deploy complains that they don't exist, make them once:
+
+    npx wrangler d1 create knnysfiles-db        # paste the database_id it prints into wrangler.jsonc
+    npx wrangler r2 bucket create knnysfiles-media
+
+and add the admin password as a secret on the worker (dashboard: settings, variables and secrets, or `npx wrangler secret put ADMIN_PASSWORD`). pick a long one. five wrong tries locks an address out for ten minutes.
+
+optional: `INQUIRY_WEBHOOK_URL` as a secret sends a copy of each inquiry to a webhook (slack, zapier, an email service). inquiries are always saved to the database either way.
+
+test the cloudflare runtime locally with `npm run preview`.
 
 ## before launch
 
-- set `INQUIRY_WEBHOOK_URL` (see `.env.example`). without it, the form shows an error in production. in dev it logs to the terminal and shows the sent window.
-- replace the bracketed placeholders in `site.ts`: email, bio, counts, photo details, project descriptions.
-- give each project its own cover. all four use the wedding photo for now.
+- open `/admin/content` and replace the bracketed placeholders: email, bio, photo details, folder descriptions. add real photos and covers.
+- give every photo a description for screen readers. the editor counts the ones still missing.
+- the three accounts (cloudflare, github, domain) should sit under the client, with david added as admin.

@@ -4,8 +4,9 @@ import { animate } from 'motion';
 import { motion, useTransform } from 'motion/react';
 import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { flushSync } from 'react-dom';
-import { about, projects, site } from '@/content/site';
+import { useContent } from '@/content/context';
 import { EASE, isSmall, prefersReducedMotion } from '@/lib';
+import { sourceLabel } from '@/track';
 import { Chevron } from './Icons';
 import { useDrift } from './useDrift';
 import { PathBar, TitleBar } from './Window';
@@ -22,6 +23,7 @@ function validate(values: typeof empty) {
 }
 
 function InquiryForm({ onSent }: { onSent: () => void }) {
+  const { about, projects, site } = useContent();
   const [values, setValues] = useState(empty);
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<'idle' | 'sending' | 'failed'>('idle');
@@ -46,7 +48,7 @@ function InquiryForm({ onSent }: { onSent: () => void }) {
     const ok = await fetch('/api/inquiry', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(values),
+      body: JSON.stringify({ ...values, source: sourceLabel() }),
     }).then((r) => r.ok, () => false);
     if (ok) onSent();
     else setStatus('failed');
@@ -114,6 +116,7 @@ function InquiryForm({ onSent }: { onSent: () => void }) {
 }
 
 export function Contact() {
+  const { site } = useContent();
   const { ref, drift } = useDrift<HTMLElement>();
   const wallY = useTransform(drift, (q) => (q ? q * 60 * (isSmall() ? 0.35 : 1) : 0));
   const windowRef = useRef<HTMLDivElement>(null);

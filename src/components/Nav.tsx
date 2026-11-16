@@ -3,20 +3,21 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { useEffect, useRef, useState } from 'react';
-import { about, projectPath, projects, site } from '@/content/site';
+import { useContent } from '@/content/context';
+import { projectPath } from '@/content/site';
 import { EASE, isSmall } from '@/lib';
 import { useMenu } from './Providers';
 import { SiteImage } from './SiteImage';
 import { SiteLink } from './SiteLink';
 import { PathBar, TitleBar } from './Window';
 
-const previews = [
-  ...projects.map((p) => ({ key: p.slug, src: p.cover })),
-  { key: 'about', src: about.portrait },
-  { key: 'contact', src: site.heroWallpaperSmall.src },
-];
-
 function Menu({ button }: { button: React.RefObject<HTMLButtonElement | null> }) {
+  const { about, projects, site } = useContent();
+  const previews = [
+    ...projects.map((p) => ({ key: p.slug, src: p.cover })),
+    { key: 'about', src: about.portrait },
+    { key: 'contact', src: site.heroWallpaperSmall.src },
+  ];
   const { setOpen } = useMenu();
   const [active, setActive] = useState(projects[0].slug);
   const panel = useRef<HTMLElement>(null);
@@ -98,6 +99,7 @@ function Menu({ button }: { button: React.RefObject<HTMLButtonElement | null> })
 }
 
 export function Nav() {
+  const { site } = useContent();
   const { open, setOpen } = useMenu();
   const button = useRef<HTMLButtonElement>(null);
   const lenis = useLenis();

@@ -1,12 +1,13 @@
 'use client';
 
 import { motion, useTransform } from 'motion/react';
-import { about } from '@/content/site';
+import { useContent } from '@/content/context';
 import { SiteImage } from './SiteImage';
 import { useDrift } from './useDrift';
 import { TitleBar } from './Window';
 
 export function About() {
+  const { about } = useContent();
   const { ref, drift } = useDrift<HTMLElement>();
   const onDesktop = () => window.innerWidth >= 1024;
   const photoY = useTransform(drift, (p) => (p && onDesktop() ? p * 46 : 0));

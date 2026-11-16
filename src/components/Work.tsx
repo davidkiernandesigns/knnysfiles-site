@@ -1,10 +1,11 @@
-import { projects, site } from '@/content/site';
+import { getContent } from '@/server/content';
 import { Folder } from './Folder';
 import { GalleryIcon, Grid, List } from './Icons';
 import { Reveal } from './Reveal';
 import { PathBar, Sidebar, TitleBar } from './Window';
 
-export function Work() {
+export async function Work() {
+  const { projects, site } = await getContent();
   const views = (
     <span className="views" aria-hidden="true">
       <span><Grid /></span>
