@@ -1,6 +1,7 @@
 import { getContent } from '@/server/content';
 import { Folder } from './Folder';
 import { GalleryIcon, Grid, List } from './Icons';
+import { SplitTitle } from './Motion';
 import { Reveal } from './Reveal';
 import { PathBar, Sidebar, TitleBar } from './Window';
 
@@ -17,10 +18,10 @@ export async function Work() {
   return (
     <section className="work" id="work">
       <Reveal small className="section-head">
-        <h2>work</h2>
+        <SplitTitle text="work" />
         <p>open a folder to see the full set.</p>
       </Reveal>
-      <Reveal className="window">
+      <Reveal window className="window">
         <TitleBar title="work" views={views} />
         <div className="finder">
           <Sidebar />

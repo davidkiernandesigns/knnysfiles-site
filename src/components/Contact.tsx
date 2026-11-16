@@ -8,6 +8,7 @@ import { useContent } from '@/content/context';
 import { EASE, isSmall, prefersReducedMotion } from '@/lib';
 import { sourceLabel } from '@/track';
 import { Chevron } from './Icons';
+import { SplitTitle, useWindowOpen } from './Motion';
 import { useDrift } from './useDrift';
 import { PathBar, TitleBar } from './Window';
 
@@ -66,7 +67,7 @@ function InquiryForm({ onSent }: { onSent: () => void }) {
   return (
     <form className="form" ref={form} onSubmit={submit} noValidate>
       <div className="form-head">
-        <h2>book a shoot</h2>
+        <SplitTitle text="book a shoot" delay={0.25} />
         <p>{site.inquiryIntro}</p>
       </div>
       <div className="row">
@@ -122,6 +123,7 @@ export function Contact() {
   const windowRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
   const [sent, setSent] = useState(false);
+  const open = useWindowOpen();
 
   /* The window keeps its place and resizes between the form and the sent state. */
   const morph = (next: boolean) => {
@@ -150,7 +152,7 @@ export function Contact() {
   return (
     <section className="contact" id="contact" ref={ref}>
       <motion.div className="contact-wall" style={{ y: wallY }} />
-      <div className={`window inquiry${sent ? ' sent' : ''}`} ref={windowRef}>
+      <motion.div className={`window inquiry${sent ? ' sent' : ''}`} ref={windowRef} {...open}>
         <TitleBar title={sent ? 'inquiry sent' : 'new inquiry'} />
         {sent ? (
           <motion.div className="sent-body" role="status" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.2, delay: 0.12 }}>
@@ -164,7 +166,7 @@ export function Contact() {
             <PathBar status={site.email}>{site.name}<b>›</b>new inquiry</PathBar>
           </>
         )}
-      </div>
+      </motion.div>
     </section>
   );
 }

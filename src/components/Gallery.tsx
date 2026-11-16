@@ -1,7 +1,7 @@
 'use client';
 
 import { animate, motion, useMotionValue, useTransform } from 'motion/react';
-import { useCallback, useEffect, useRef, useState, type PointerEvent } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent } from 'react';
 import type { Photo, Project } from '@/content/site';
 import { useContent } from '@/content/context';
 import { prefersReducedMotion } from '@/lib';
@@ -139,6 +139,7 @@ export function Gallery({ project }: { project: Project }) {
                 <button
                   key={p.file}
                   className="thumb"
+                  style={{ '--i': Math.min(i, 14) } as CSSProperties}
                   type="button"
                   aria-label={`show photo ${i + 1}`}
                   aria-current={i === index ? 'true' : undefined}

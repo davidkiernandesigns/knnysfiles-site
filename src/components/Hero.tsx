@@ -2,7 +2,7 @@
 
 import { motion, useScroll, useTransform } from 'motion/react';
 import Link from 'next/link';
-import { useRef, type CSSProperties } from 'react';
+import { useEffect, useRef, type CSSProperties } from 'react';
 import { useContent } from '@/content/context';
 import { projectPath } from '@/content/site';
 import { clamp, isSmall, prefersReducedMotion } from '@/lib';
@@ -22,8 +22,49 @@ function FolderLink({ slug, label, index }: { slug: string; label: string; index
   );
 }
 
+/* macOS Dock magnification: icons swell as the pointer passes over the row. Mouse and trackpad only. */
+function useDock() {
+  const row = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const box = row.current;
+    if (!box || prefersReducedMotion() || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    const arts = Array.from(box.querySelectorAll<HTMLElement>('.icon-art'));
+    let x: number | null = null;
+    let frame = 0;
+    const apply = () => {
+      frame = 0;
+      for (const art of arts) {
+        if (x === null) {
+          art.style.removeProperty('--dock');
+          continue;
+        }
+        const r = art.getBoundingClientRect();
+        const d = Math.min(1, Math.abs(x - (r.left + r.width / 2)) / 170);
+        art.style.setProperty('--dock', (1 + 0.42 * (Math.cos(d * Math.PI) + 1) / 2).toFixed(3));
+      }
+    };
+    const move = (e: MouseEvent) => {
+      x = e.clientX;
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    const leave = () => {
+      x = null;
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    box.addEventListener('mousemove', move);
+    box.addEventListener('mouseleave', leave);
+    return () => {
+      cancelAnimationFrame(frame);
+      box.removeEventListener('mousemove', move);
+      box.removeEventListener('mouseleave', leave);
+    };
+  }, []);
+  return row;
+}
+
 export function Hero() {
   const { about, projects, site } = useContent();
+  const dock = useDock();
   const { scrollY } = useScroll();
   const drift = (rate: number) => (y: number) =>
     prefersReducedMotion() ? 0 : y * rate * (isSmall() ? 0.35 : 1);
@@ -45,7 +86,7 @@ export function Hero() {
           </motion.div>
           <p className="visually-hidden">{site.tagline}</p>
         </div>
-        <div className="icons">
+        <div className="icons" ref={dock}>
           {projects.map((p, i) => (
             <FolderLink key={p.slug} slug={p.slug} label={p.name} index={i} />
           ))}

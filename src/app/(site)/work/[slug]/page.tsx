@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Gallery } from '@/components/Gallery';
 import { Folder } from '@/components/Folder';
 import { SiteLink } from '@/components/SiteLink';
+import { SplitTitle } from '@/components/Motion';
 import { getContent } from '@/server/content';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -26,7 +27,7 @@ export default async function ProjectPage({ params }: Props) {
       <Gallery project={project} />
       <section className="next">
         <div className="next-cta">
-          <h2>want a set like this?</h2>
+          <SplitTitle text="want a set like this?" />
           <SiteLink className="button" href="/#contact">book a shoot</SiteLink>
         </div>
         <div className="next-folder">
