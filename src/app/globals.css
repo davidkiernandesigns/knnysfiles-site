@@ -85,9 +85,9 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1; text
 .nav .logo { transition: color .15s, opacity .25s, font-size .4s var(--ease); }
 .nav.glass .logo { font-size: 24px; text-shadow: none; }
 .nav.glass .line { box-shadow: none; }
-.nav .book { transition: background .15s, opacity .2s, border-radius .4s var(--ease); }
-.nav.glass .book { border-radius: 999px; }
 body.menu-open .nav::before { opacity: 0; }
+/* on the home page the big wordmark is the branding, so the small logo waits until the pill appears */
+.nav.home:not(.glass) .logo { opacity: 0; pointer-events: none; }
 @media (max-width: 767px) {
   .nav.glass { top: calc(8px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; padding: 5px 4px 5px 16px; }
   .nav.glass .logo { font-size: 22px; }
@@ -114,7 +114,7 @@ body.menu-open .book, body.menu-open .logo { opacity: 0; pointer-events: none; }
 
 .button {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 18px 28px; background: var(--accent); color: var(--black);
+  padding: 18px 28px; border-radius: 999px; background: var(--accent); color: var(--black);
   font: 500 15px/1 var(--body); transition: background .15s;
 }
 .button:hover { background: var(--oat); }

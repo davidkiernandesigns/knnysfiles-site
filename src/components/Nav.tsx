@@ -125,7 +125,7 @@ export function Nav() {
 
   return (
     <>
-      <header className={`nav${scrolled ? ' glass' : ''}`}>
+      <header className={`nav${scrolled ? ' glass' : ''}${pathname === '/' ? ' home' : ''}`}>
         <SiteLink className="logo" href="/">{site.name}</SiteLink>
         <div className="nav-actions">
           <SiteLink className="button button-small book" href="/#contact">book a shoot</SiteLink>
