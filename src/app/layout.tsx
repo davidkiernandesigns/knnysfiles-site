@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   description: 'knnysfiles, photography by Kenny Graham.',
 };
 
-export const viewport: Viewport = { themeColor: '#141211', viewportFit: 'cover' };
+export const viewport: Viewport = { themeColor: '#000000', viewportFit: 'cover' };
 
 /* Runs before first paint so the intro never flashes. Only plays on a fresh load of the home page. */
 const introScript = `(function(){try{

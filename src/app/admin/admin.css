@@ -5,11 +5,11 @@
   width: 100%; min-width: 0; font: 400 15px/1.4 var(--body); color: var(--oat); background: var(--black);
   border: 1px solid var(--edge); border-radius: 8px; padding: 10px 12px;
 }
-.adm input:focus, .adm select:focus, .adm textarea:focus { outline: 2px solid var(--mocha); outline-offset: 1px; }
+.adm input:focus, .adm select:focus, .adm textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .adm textarea { resize: vertical; min-height: 84px; }
 .adm label.lab { display: grid; gap: 6px; font-size: 13px; color: var(--stone); }
 .adm button, .adm .btn { cursor: pointer; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; padding: 10px 16px; font: 500 14px/1 var(--body); background: var(--mocha); color: var(--black); transition: background .15s; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border-radius: 8px; padding: 10px 16px; font: 500 14px/1 var(--body); background: var(--accent); color: var(--black); transition: background .15s; }
 .btn:hover { background: var(--oat); }
 .btn:disabled { opacity: .45; cursor: default; }
 .btn.ghost { background: transparent; color: var(--oat); border: 1px solid var(--edge); }
@@ -21,13 +21,13 @@
 .adm-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 18px; padding: 0 20px; min-height: 52px; background: var(--umber); border-bottom: 1px solid var(--stone); }
 .adm-top .dots { display: flex; gap: 8px; }
 .adm-top .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
-.adm-top .dots i:nth-child(1) { background: var(--mocha); } .adm-top .dots i:nth-child(2) { background: var(--stone); } .adm-top .dots i:nth-child(3) { background: var(--taupe); }
+.adm-top .dots i:nth-child(1) { background: var(--accent); } .adm-top .dots i:nth-child(2) { background: var(--mocha); } .adm-top .dots i:nth-child(3) { background: var(--oat); opacity: .35; }
 .adm-top b { font: 400 22px/1 var(--display); letter-spacing: .02em; }
 .adm-top nav { display: flex; gap: 4px; margin-left: 8px; }
 .adm-top nav a { padding: 8px 12px; border-radius: 8px; font-size: 14px; color: var(--stone); display: flex; gap: 8px; align-items: center; }
 .adm-top nav a:hover { color: var(--oat); }
 .adm-top nav a[aria-current='page'] { background: var(--black); color: var(--oat); }
-.adm-top nav em { font-style: normal; font-size: 11px; background: var(--mocha); color: var(--black); border-radius: 99px; padding: 2px 7px; }
+.adm-top nav em { font-style: normal; font-size: 11px; background: var(--accent); color: var(--black); border-radius: 99px; padding: 2px 7px; }
 .adm-top .right { margin-left: auto; display: flex; gap: 14px; align-items: center; font-size: 14px; color: var(--stone); }
 .adm-top .right a:hover, .adm-top .right button:hover { color: var(--oat); }
 .adm-main { max-width: 1120px; margin: 0 auto; padding: 32px 20px 120px; display: grid; gap: 28px; }
@@ -60,15 +60,15 @@
 .empty { color: var(--stone); font-size: 14px; }
 .note { padding: 14px 16px; border: 1px solid var(--edge); border-radius: 10px; font-size: 14px; color: var(--mocha); background: var(--umber); }
 .pill { display: inline-block; font-size: 12px; padding: 3px 9px; border-radius: 99px; border: 1px solid var(--edge); color: var(--stone); }
-.pill.new { background: var(--mocha); color: var(--black); border-color: var(--mocha); }
+.pill.new { background: var(--accent); color: var(--black); border-color: var(--accent); }
 .pill.booked { color: var(--oat); border-color: var(--oat); }
 
 /* inquiries */
 .board { display: grid; grid-template-columns: minmax(280px, 380px) minmax(0, 1fr); gap: 12px; align-items: start; }
 .inq-list { display: grid; gap: 6px; max-height: 70vh; overflow: auto; }
 .inq { text-align: left; display: grid; gap: 4px; padding: 12px 14px; border: 1px solid var(--edge); border-radius: 10px; background: var(--umber); width: 100%; }
-.inq:hover { background: #342b26; }
-.inq[aria-current='true'] { border-color: var(--mocha); }
+.inq:hover { background: #1c1c1c; }
+.inq[aria-current='true'] { border-color: var(--accent); }
 .inq .l1 { display: flex; justify-content: space-between; gap: 10px; }
 .inq .l1 b { font-weight: 500; }
 .inq small { color: var(--stone); font-size: 13px; }
@@ -77,7 +77,7 @@
 .detail .msg { white-space: pre-wrap; background: var(--black); border-radius: 10px; padding: 14px; font-size: 15px; }
 .statuses { display: flex; gap: 6px; flex-wrap: wrap; }
 .statuses button { padding: 7px 12px; border-radius: 99px; border: 1px solid var(--edge); font-size: 13px; color: var(--stone); }
-.statuses button[aria-pressed='true'] { background: var(--mocha); color: var(--black); border-color: var(--mocha); }
+.statuses button[aria-pressed='true'] { background: var(--accent); color: var(--black); border-color: var(--accent); }
 .row-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
 /* content editor */
@@ -93,8 +93,8 @@
 .photo .meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 .photo .meta .wide { grid-column: 1 / -1; }
 .photo .ctl { display: grid; gap: 6px; }
-.tone-mocha { background: var(--mocha); } .tone-taupe { background: var(--taupe); } .tone-umber { background: #3a302a; } .tone-stone { background: var(--stone); }
-.savebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; gap: 14px; align-items: center; justify-content: center; padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)); background: rgba(43, 36, 32, .96); border-top: 1px solid var(--stone); backdrop-filter: blur(8px); }
+.tone-mocha { background: var(--mocha); } .tone-taupe { background: var(--taupe); } .tone-umber { background: #2a2a2a; } .tone-stone { background: var(--stone); }
+.savebar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; gap: 14px; align-items: center; justify-content: center; padding: 14px 20px calc(14px + env(safe-area-inset-bottom, 0px)); background: rgba(18, 18, 18, .96); border-top: 1px solid var(--stone); backdrop-filter: blur(8px); }
 .savebar span { font-size: 14px; color: var(--stone); }
 .savebar span.err { color: var(--error); }
 .drop { border: 1px dashed var(--taupe); border-radius: 10px; padding: 18px; text-align: center; color: var(--stone); font-size: 14px; cursor: pointer; }
