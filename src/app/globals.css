@@ -69,19 +69,30 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1; text
   pointer-events: none;
 }
 .nav > * { pointer-events: auto; }
-/* glass: frosted bar, like iOS, that fades in once the page scrolls */
-.nav { isolation: isolate; }
+/* glass pill: once the page scrolls, the nav pulls in from the edges into a floating frosted capsule, like iOS.
+   at the top of the page it stays a clear full-width bar over the photo. */
+.nav { isolation: isolate; transition: top .4s var(--ease), left .4s var(--ease), right .4s var(--ease), padding .4s var(--ease); }
 .nav::before {
-  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0;
-  background: rgba(0, 0, 0, .55);
-  -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
-  border-bottom: 1px solid rgba(253, 247, 231, .08);
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0; border-radius: 999px;
+  background: rgba(40, 40, 40, .38);
+  -webkit-backdrop-filter: blur(26px) saturate(190%); backdrop-filter: blur(26px) saturate(190%);
+  border: 1px solid rgba(253, 247, 231, .16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 10px 30px rgba(0, 0, 0, .35);
   transition: opacity .3s ease-out;
 }
+.nav.glass { top: 12px; left: max(12px, calc((100vw - 880px) / 2)); right: max(12px, calc((100vw - 880px) / 2)); padding: 8px 8px 8px 22px; }
 .nav.glass::before { opacity: 1; }
-.nav.glass .logo, .nav.glass .line { text-shadow: none; box-shadow: none; }
+.nav .logo { transition: color .15s, opacity .25s, font-size .4s var(--ease); }
+.nav.glass .logo { font-size: 24px; text-shadow: none; }
+.nav.glass .line { box-shadow: none; }
+.nav .book { transition: background .15s, opacity .2s, border-radius .4s var(--ease); }
+.nav.glass .book { border-radius: 999px; }
 body.menu-open .nav::before { opacity: 0; }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .nav::before { background: rgba(0, 0, 0, .92); } }
+@media (max-width: 767px) {
+  .nav.glass { top: calc(8px + env(safe-area-inset-top, 0px)); left: 10px; right: 10px; padding: 5px 4px 5px 16px; }
+  .nav.glass .logo { font-size: 22px; }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .nav::before { background: rgba(18, 18, 18, .94); } }
 .logo { font: 400 30px/1 var(--display); color: var(--oat); text-shadow: 0 1px 12px rgba(0, 0, 0, .35); transition: color .15s, opacity .25s; }
 .logo:hover { color: var(--accent); }
 .nav-actions { display: flex; align-items: center; gap: 16px; }

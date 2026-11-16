@@ -107,7 +107,7 @@ export function Nav() {
   const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
 
-  // the glass bar fades in once the page moves, so the nav never sits bare on top of content
+  // once the page moves, the nav pulls into a floating glass pill (see .nav.glass), so it never sits bare on top of content
   useEffect(() => {
     const check = () => setScrolled(window.scrollY > 24);
     check();
