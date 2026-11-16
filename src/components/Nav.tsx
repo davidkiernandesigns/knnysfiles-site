@@ -3,6 +3,7 @@
 import { AnimatePresence, motion } from 'motion/react';
 import { useLenis } from 'lenis/react';
 import { useEffect, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { useContent } from '@/content/context';
 import { projectPath } from '@/content/site';
 import { EASE, isSmall } from '@/lib';
@@ -103,6 +104,16 @@ export function Nav() {
   const { open, setOpen } = useMenu();
   const button = useRef<HTMLButtonElement>(null);
   const lenis = useLenis();
+  const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
+
+  // the glass bar fades in once the page moves, so the nav never sits bare on top of content
+  useEffect(() => {
+    const check = () => setScrolled(window.scrollY > 24);
+    check();
+    window.addEventListener('scroll', check, { passive: true });
+    return () => window.removeEventListener('scroll', check);
+  }, [pathname]);
 
   useEffect(() => {
     document.body.classList.toggle('menu-open', open);
@@ -114,7 +125,7 @@ export function Nav() {
 
   return (
     <>
-      <header className="nav">
+      <header className={`nav${scrolled ? ' glass' : ''}`}>
         <SiteLink className="logo" href="/">{site.name}</SiteLink>
         <div className="nav-actions">
           <SiteLink className="button button-small book" href="/#contact">book a shoot</SiteLink>

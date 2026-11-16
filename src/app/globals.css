@@ -69,6 +69,19 @@ h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1; text
   pointer-events: none;
 }
 .nav > * { pointer-events: auto; }
+/* glass: frosted bar, like iOS, that fades in once the page scrolls */
+.nav { isolation: isolate; }
+.nav::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: 0;
+  background: rgba(0, 0, 0, .55);
+  -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+  border-bottom: 1px solid rgba(253, 247, 231, .08);
+  transition: opacity .3s ease-out;
+}
+.nav.glass::before { opacity: 1; }
+.nav.glass .logo, .nav.glass .line { text-shadow: none; box-shadow: none; }
+body.menu-open .nav::before { opacity: 0; }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { .nav::before { background: rgba(0, 0, 0, .92); } }
 .logo { font: 400 30px/1 var(--display); color: var(--oat); text-shadow: 0 1px 12px rgba(0, 0, 0, .35); transition: color .15s, opacity .25s; }
 .logo:hover { color: var(--accent); }
 .nav-actions { display: flex; align-items: center; gap: 16px; }
