@@ -2,13 +2,15 @@
 
 import { animate } from 'motion';
 import { motion, useTransform } from 'motion/react';
-import { useRef, useState, type ChangeEvent, type FormEvent } from 'react';
+import { useCallback, useRef, useState, type ChangeEvent, type FormEvent } from 'react';
 import { flushSync } from 'react-dom';
 import { useContent } from '@/content/context';
 import { EASE, isSmall, prefersReducedMotion } from '@/lib';
 import { sourceLabel } from '@/track';
 import { Chevron } from './Icons';
 import { SplitTitle, useWindowOpen } from './Motion';
+import { useScrollTo } from './Providers';
+import { Toast } from './Toast';
 import { useDrift } from './useDrift';
 import { PathBar, TitleBar } from './Window';
 
@@ -124,6 +126,18 @@ export function Contact() {
   const closeRef = useRef<HTMLButtonElement>(null);
   const [sent, setSent] = useState(false);
   const open = useWindowOpen();
+  const [toast, setToast] = useState(false);
+  const hideToast = useCallback(() => setToast(false), []);
+  const scrollTo = useScrollTo();
+
+  /* after the window resizes, bring it fully into view below the nav */
+  const settle = () => {
+    const win = windowRef.current;
+    if (!win) return;
+    const r = win.getBoundingClientRect();
+    if (r.top >= 90 && r.bottom <= window.innerHeight) return;
+    scrollTo(Math.max(0, r.top + window.scrollY - Math.max(90, (window.innerHeight - r.height) / 2)));
+  };
 
   /* The window keeps its place and resizes between the form and the sent state. */
   const morph = (next: boolean) => {
@@ -133,9 +147,13 @@ export function Contact() {
     const from = { width: win.offsetWidth, height: win.offsetHeight };
     section.style.minHeight = next ? `${section.offsetHeight}px` : '';
     flushSync(() => setSent(next));
+    if (next) setToast(true);
     if (next) closeRef.current?.focus({ preventScroll: true });
     else win.querySelector<HTMLElement>('#f-name')?.focus({ preventScroll: true });
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion()) {
+      settle();
+      return;
+    }
     const to = { width: win.offsetWidth, height: win.offsetHeight };
     win.style.maxWidth = 'none';
     animate(
@@ -146,6 +164,7 @@ export function Contact() {
       win.style.width = '';
       win.style.height = '';
       win.style.maxWidth = '';
+      settle();
     });
   };
 
@@ -167,6 +186,7 @@ export function Contact() {
           </>
         )}
       </motion.div>
+      <Toast show={toast} onDone={hideToast} title={site.name} body="inquiry received. i'll reply soon." />
     </section>
   );
 }
