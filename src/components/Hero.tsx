@@ -84,7 +84,7 @@ export function Hero() {
           <motion.div style={{ opacity: wordOpacity }}>
             <h1 className="wordmark">{site.name}</h1>
           </motion.div>
-          <p className="visually-hidden">{site.tagline}</p>
+          <p className="hero-tag">{site.tagline}</p>
         </div>
         <div className="icons" ref={dock}>
           {projects.map((p, i) => (

@@ -61,17 +61,17 @@ export const site: SiteDoc = {
   heroWallpaper: { src: '/assets/hero.jpg', width: 2560, height: 1440 },
   heroWallpaperSmall: { src: '/assets/hero-sm.jpg', width: 1000, height: 563 },
   inquiryIntro: "tell me about the shoot and i'll reply with availability and pricing.",
-  photoDimensions: '[6000 × 4000]',
+  photoDimensions: '6000 × 4000 px',
 };
 
 export const about: AboutDoc = {
   portrait: '/assets/portrait.jpg',
   portraitAlt: 'Kenny Graham walking on a sand dune with a camera',
-  portraitFile: '[name].jpg',
+  portraitFile: 'kenny_dune.jpg',
   bioLead:
     "i'm Kenny Graham, a photographer in CT. i shoot weddings, portraits, graduations and anything else worth keeping.",
   bioBody:
-    "[two or three lines from him: how he works, what he cares about, what it's like to be photographed by him.]",
+    "i keep it relaxed. no stiff poses, no shot list you have to memorize. i show up early, stay out of the way and shoot what's actually happening, then edit with a light touch so the photos still feel like that day. most people tell me they forgot i was there.",
   instagramHandle: '@knnysfiles',
   instagramUrl: 'https://www.instagram.com/knnysfiles/',
 };

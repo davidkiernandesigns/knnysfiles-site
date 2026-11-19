@@ -73,13 +73,30 @@ export const exampleDescriptions: Record<string, string> = {
 
 const tones: Tone[] = ['mocha', 'taupe', 'umber', 'stone'];
 
+/* filler shoot dates and venues so the info panel reads like real work */
+const where: Record<string, string[]> = {
+  weddings: ['Mystic, CT', 'Greenwich, CT', 'Stonington, CT', 'Essex, CT', 'Litchfield, CT', 'New Haven, CT'],
+  portraits: ['Hartford, CT', 'West Hartford, CT', 'Stamford, CT', 'New Haven, CT', 'Westport, CT'],
+  graduations: ['Storrs, CT', 'New Haven, CT', 'Fairfield, CT', 'Hartford, CT', 'Middletown, CT'],
+  misc: ['Providence, RI', 'New York, NY', 'Hartford, CT', 'Branford, CT', 'Boston, MA'],
+};
+const when: Record<string, string[]> = {
+  weddings: ['june 2025', 'september 2025', 'october 2025', 'may 2025', 'august 2025'],
+  portraits: ['march 2025', 'april 2025', 'november 2025', 'july 2025'],
+  graduations: ['may 2025', 'may 2026', 'june 2025', 'december 2025'],
+  misc: ['january 2025', 'february 2026', 'october 2025', 'august 2025'],
+};
+export const exampleMeta = (folder: string, i: number) => ({
+  date: when[folder]?.[(i * 3 + 1) % when[folder].length] ?? 'june 2025',
+  location: where[folder]?.[i % where[folder].length] ?? 'CT',
+});
+
 export function examplePhotos(folder: string): Photo[] {
   return (sets[folder] ?? []).map(([id, alt], i) => ({
     file: `kf_${String(i + 1).padStart(4, '0')}.jpg`,
     image: `${U}${id}`,
     alt,
-    date: 'example',
-    location: 'unsplash',
+    ...exampleMeta(folder, i),
     tone: tones[i % tones.length],
   }));
 }
